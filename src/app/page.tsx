@@ -1,6 +1,8 @@
 import { ChatShell } from "@/components/chat-shell";
 import { ensureDefaultConversation, getConversationMessages, getDashboardMetrics, getLogs, listConversations } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   await ensureDefaultConversation();
 
