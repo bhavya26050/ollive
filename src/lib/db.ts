@@ -1,3 +1,10 @@
+/**
+ * Prisma DB helpers
+ *
+ * Small, focused functions for conversations, messages and inference logs.
+ * Keep Prisma usage centralized here to simplify future refactors and tests.
+ */
+
 import { ConversationStatus, InferenceStatus, MessageRole, Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import type { DashboardMetrics, InferenceLogDTO, ConversationDTO, ChatMessageDTO } from "./types";

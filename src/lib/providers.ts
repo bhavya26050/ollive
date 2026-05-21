@@ -1,3 +1,10 @@
+/**
+ * Provider adapters and small helpers for generating chat replies.
+ *
+ * Supported providers: mock, openai, anthropic, gemini.
+ * The Gemini adapter sends the API key in the `x-goog-api-key` header by default
+ * and also supports the `?key=` query parameter for compatibility.
+ */
 import type { ChatRole } from "./types";
 
 export type ProviderName = "mock" | "openai" | "anthropic" | "gemini";
@@ -179,14 +186,24 @@ async function generateGeminiReply(input: ChatGenerationInput) {
       parts: [{ text: message.content }],
     }));
 
-  const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
+  const urlBase = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
+
+  // Support multiple auth styles
+  // 1) OAuth bearer token (preferred for production): set `GOOGLE_GENERATIVE_AI_OAUTH_TOKEN`
+  // 2) API key via header `x-goog-api-key` or query param `?key=` (common for quick curls)
+  const oauthToken = process.env.GOOGLE_GENERATIVE_AI_OAUTH_TOKEN;
+  const useApiKey = Boolean(apiKey) && !oauthToken;
+
+  const url = useApiKey ? `${urlBase}?key=${encodeURIComponent(apiKey)}` : urlBase;
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
 
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    headers["x-goog-api-key"] = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+  if (oauthToken) {
+    headers["Authorization"] = `Bearer ${oauthToken}`;
+  } else if (apiKey) {
+    headers["x-goog-api-key"] = apiKey;
   }
 
   const response = await fetch(url, {

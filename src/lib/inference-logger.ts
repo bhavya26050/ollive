@@ -1,3 +1,11 @@
+/**
+ * Inference logger helper.
+ *
+ * Responsibilities:
+ * - Normalize and redact previews for logs
+ * - Post to the ingestion endpoint when configured
+ * - Fall back to a direct DB write when no endpoint is provided
+ */
 import { createInferenceLog } from "./db";
 import { redactSensitiveText } from "./redact";
 import type { LogStatus } from "./types";
