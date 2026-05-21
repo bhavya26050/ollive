@@ -120,7 +120,7 @@ Use the Node smoke tests (`scripts/smoke-test.js`) to exercise these routes loca
 
 Add these to your local `.env.local` (do NOT commit):
 
-- `DATABASE_URL_POSTGRES_URL` — Postgres connection string used by Prisma (recommended for Vercel Postgres).
+- `DATABASE_URL` — Postgres connection string used by Prisma (recommended for Vercel Postgres).
 - `DEFAULT_PROVIDER` — `mock` (default) or one of `openai`, `anthropic`, `gemini`.
 - `DEFAULT_MODEL` — default model name to use when creating new conversations.
 - `OPENAI_API_KEY` — optional for OpenAI provider.
@@ -154,7 +154,7 @@ docker compose up --build
 docker compose up -d --build
 ```
 
-Note: For production, use a managed Postgres and update `DATABASE_URL_POSTGRES_URL` accordingly.
+Note: For production, use a managed Postgres and update `DATABASE_URL` accordingly.
 
 ## CI / Smoke Tests
 
@@ -164,7 +164,7 @@ This repo contains a GitHub Actions workflow `.github/workflows/smoke-test.yml` 
 
 - Rotate any API key immediately if it is accidentally exposed.
 - Use OAuth tokens or server-to-server auth for production provider calls when available.
-- Avoid SQLite in production; use a managed SQL DB and configure `DATABASE_URL_POSTGRES_URL`.
+- Avoid SQLite in production; use a managed SQL DB and configure `DATABASE_URL`.
 - Limit retention of PII in `inputPreview` / `outputPreview`. Prefer storing raw payloads only in secured metadata fields if necessary.
 
 ## Contributing
@@ -190,7 +190,7 @@ This repo contains a GitHub Actions workflow `.github/workflows/smoke-test.yml` 
 
 Preferred: Vercel (Next.js)
 - Root directory: `ollive`
-- Set env vars in Vercel Project Settings: `DATABASE_URL_POSTGRES_URL` (Postgres recommended), provider keys.
+- Set env vars in Vercel Project Settings: `DATABASE_URL` (Postgres recommended), provider keys.
 
 Alternative: Docker-compose on a VM / cloud provider
 - Use the supplied `docker-compose.yml` and a persistent DB volume.
