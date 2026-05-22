@@ -3,7 +3,7 @@
 ## Ingestion Flow
 
 1. The UI sends a chat turn to `POST /api/conversations/[conversationId]/messages`.
-2. The route loads the short context window, calls the selected provider adapter, and writes the user and assistant messages to SQLite.
+2. The route loads the short context window, calls the selected provider adapter, and writes the user and assistant messages to MongoDB via Prisma.
 3. The inference wrapper redacts sensitive text, converts the result into an ingestion payload, and posts it to `POST /api/ingest`.
 4. The ingestion route validates the payload with `zod`, normalizes the timestamps and numbers, and persists the record through Prisma.
 
@@ -16,7 +16,7 @@
 
 ## Scaling Considerations
 
-1. SQLite is fine for a demo or a single-node deployment, but a production version should move to Postgres or another server database.
+1. MongoDB is a good fit here because the app stores flexible conversation and log documents while keeping the API simple.
 2. The ingestion boundary can later be replaced with a queue or event bus without changing the UI contract.
 3. Conversation reads are already paginable and the context window is intentionally small to keep inference cost bounded.
 4. Metrics are computed from database aggregates; for larger scale, precomputed rollups or a metrics store would be better.

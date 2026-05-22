@@ -16,7 +16,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "Ollive | inference logging demo",
-  description: "A lightweight chatbot with inference metadata capture, ingestion, and SQLite storage.",
+  description: "A lightweight chatbot with inference metadata capture, ingestion, and MongoDB storage.",
 };
 
 export default function RootLayout({

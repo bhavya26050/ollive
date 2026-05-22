@@ -30,10 +30,10 @@ Quick map
 Notes for contributors
 
 - Secrets: add API keys to `.env.local`. Do not commit `.env` files. Rotate keys if they are ever exposed.
-- DB: the project uses SQLite for convenience. Use `npm run db:push` to initialize a local DB. The repository intentionally ignores local DB files.
+- DB: the project uses MongoDB through Prisma. Use `npm run db:push` to initialize the schema against your local MongoDB instance or hosted cluster.
 - Running: `npm ci && npm run dev` runs the app locally.
 
 If you want I can also:
 - Add JSDoc comments in critical functions (providers, inference logger, db helpers).
 - Rename or split large files into smaller modules for faster onboarding.
-- Remove any remaining committed binaries if you approve (I attempted to clean `prisma/*.db` but left placeholders — I can remove them with your confirmation).
+- Remove any remaining committed artifacts if you approve.

@@ -33,7 +33,7 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# ignore local sqlite db files
+# ignore local database artifacts
 /prisma/*.db
 /prisma/data/*.db
 

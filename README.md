@@ -5,7 +5,7 @@ Ollive is a compact demo that demonstrates a provider-agnostic multi-turn chat U
 This repository contains:
 - A Next.js (App Router) frontend + API routes (TypeScript)
 - Provider adapters for Mock, OpenAI, Anthropic and Google Gemini
-- An ingestion API that validates and persists inference logs via Prisma + SQLite
+- An ingestion API that validates and persists inference logs via Prisma + MongoDB
 - A small React chat UI that exercises the stack end-to-end
 - Docker + docker-compose for local containerized runs
 - A GitHub Action that runs a smoke test on push/PR
@@ -40,7 +40,13 @@ cp .env.example .env.local
 # Edit .env.local and set provider keys as needed (do not commit)
 ```
 
-3. Initialize the local database (Prisma + SQLite):
+3. Start MongoDB and initialize the local database:
+
+```bash
+docker compose up -d mongo
+```
+
+Then push the Prisma schema:
 
 ```bash
 npm run db:push
@@ -83,7 +89,7 @@ flowchart LR
   UI --> API_Messages[POST /api/conversations/:id/messages]
   API_Messages --> Providers[Provider Adapter]
   Providers -->|response + metadata| API_Messages
-  API_Messages --> DB[Prisma / SQLite]
+  API_Messages --> DB[Prisma / MongoDB]
   API_Messages --> Ingest[/api/ingest]
   Ingest --> DB
   DB --> Dashboard[UI: Logs & Metrics]
@@ -120,7 +126,7 @@ Use the Node smoke tests (`scripts/smoke-test.js`) to exercise these routes loca
 
 Add these to your local `.env.local` (do NOT commit):
 
-- `DATABASE_URL` — Postgres connection string used by Prisma (recommended for Vercel Postgres).
+- `DATABASE_URL` — MongoDB connection string used by Prisma (local MongoDB, MongoDB Atlas, or another hosted MongoDB).
 - `DEFAULT_PROVIDER` — `mock` (default) or one of `openai`, `anthropic`, `gemini`.
 - `DEFAULT_MODEL` — default model name to use when creating new conversations.
 - `OPENAI_API_KEY` — optional for OpenAI provider.
@@ -143,7 +149,7 @@ The Gemini adapter supports three auth styles (in order of preference):
 
 ## Running in Docker (local)
 
-The repo includes a `Dockerfile`, `docker-entrypoint.sh`, and `docker-compose.yml` for local containerized runs. The Compose file mounts a named volume for the SQLite DB so data persists between restarts.
+The repo includes a `Dockerfile`, `docker-entrypoint.sh`, and `docker-compose.yml` for local containerized runs. The Compose file starts MongoDB and mounts a named volume so data persists between restarts.
 
 Basic usage:
 
@@ -154,7 +160,7 @@ docker compose up --build
 docker compose up -d --build
 ```
 
-Note: For production, use a managed Postgres and update `DATABASE_URL` accordingly.
+Note: For production, use MongoDB Atlas or another managed MongoDB and update `DATABASE_URL` accordingly.
 
 ## CI / Smoke Tests
 
@@ -164,7 +170,7 @@ This repo contains a GitHub Actions workflow `.github/workflows/smoke-test.yml` 
 
 - Rotate any API key immediately if it is accidentally exposed.
 - Use OAuth tokens or server-to-server auth for production provider calls when available.
-- Avoid SQLite in production; use a managed SQL DB and configure `DATABASE_URL`.
+- Avoid file-based databases in production; use a managed MongoDB and configure `DATABASE_URL`.
 - Limit retention of PII in `inputPreview` / `outputPreview`. Prefer storing raw payloads only in secured metadata fields if necessary.
 
 ## Contributing
@@ -190,7 +196,7 @@ This repo contains a GitHub Actions workflow `.github/workflows/smoke-test.yml` 
 
 Preferred: Vercel (Next.js)
 - Root directory: `ollive`
-- Set env vars in Vercel Project Settings: `DATABASE_URL` (Postgres recommended), provider keys.
+- Set env vars in Vercel Project Settings: `DATABASE_URL` (MongoDB recommended), provider keys.
 
 Alternative: Docker-compose on a VM / cloud provider
 - Use the supplied `docker-compose.yml` and a persistent DB volume.

@@ -9,14 +9,14 @@ async function run() {
     console.log('Base URL:', base);
 
     // Create a gemini conversation
-    let res = await fetch(`${base}/api/conversations`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ provider: 'gemini', model: 'gemini-flash-latest' }) });
+    let res = await fetch(`${base}/api/conversations`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ provider: 'gemini', model: 'gemini-2.5-flash' }) });
     if (!res.ok) throw new Error(`/api/conversations creation failed: ${res.status}`);
     const created = await res.json();
     const conversationId = created.conversation?.id;
     console.log('Created conversation:', conversationId);
 
     // Send a message using provider=gemini
-    const msg = { content: 'Explain how AI works in a few words', provider: 'gemini', model: 'gemini-flash-latest' };
+    const msg = { content: 'Explain how AI works in a few words', provider: 'gemini', model: 'gemini-2.5-flash' };
     res = await fetch(`${base}/api/conversations/${conversationId}/messages`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(msg) });
     console.log('POST messages status:', res.status);
     const payload = await res.json();

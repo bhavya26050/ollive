@@ -186,7 +186,7 @@ async function generateGeminiReply(input: ChatGenerationInput) {
       parts: [{ text: message.content }],
     }));
 
-  const urlBase = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
+  const urlBase = `https://generativelanguage.googleapis.com/v1beta/models/${input.model || "gemini-2.5-flash"}:generateContent`;
 
   // Support multiple auth styles
   // 1) OAuth bearer token (preferred for production): set `GOOGLE_GENERATIVE_AI_OAUTH_TOKEN`

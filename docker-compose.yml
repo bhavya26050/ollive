@@ -1,4 +1,11 @@
 services:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - ollive-mongo:/data/db
+
   app:
     build:
       context: .
@@ -6,8 +13,10 @@ services:
       - "3000:3000"
     env_file:
       - .env
-    volumes:
-      - ollive-sqlite:/app/data
+    environment:
+      DATABASE_URL: mongodb://mongo:27017/ollive?retryWrites=true&w=majority
+    depends_on:
+      - mongo
 
 volumes:
-  ollive-sqlite:
+  ollive-mongo:

@@ -13,20 +13,20 @@ npm ci
 npm run db:push
 ```
 
-Cleaning up committed SQLite files
+Cleaning up committed local database files
 
-If the repository accidentally committed SQLite DB files (e.g. `prisma/dev.db` or `prisma/data/dev.db`), remove them from the repository and your working tree with these commands:
+If the repository accidentally committed local database files or old database artifacts, remove them from the repository and your working tree with these commands:
 
 ```bash
 # remove from git and working tree
 git rm prisma/dev.db prisma/data/dev.db || true
 # commit the removal
-git commit -m "chore: remove committed sqlite db files"
+git commit -m "chore: remove committed local db files"
 # push
 git push
 ```
 
-Note: The project now ignores `prisma/*.db` and `prisma/data/*.db`.
+Note: The project now ignores local database artifacts and old file-based DB leftovers.
 
 Secrets and keys
 
